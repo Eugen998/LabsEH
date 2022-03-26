@@ -1,10 +1,13 @@
+import 'antd/dist/antd.css';
 import logo from './logo.svg';
 import './App.css';
 import { DataGrid } from '@mui/x-data-grid';
+import { Table, Tag, Space, Button, Modal } from 'antd';
 import React, { useState, useEffect } from 'react';
 
 
 function App() {
+  const [modal, contextHolder] = Modal.useModal();
   const [patients, setPatients] = useState(0);
 
   useEffect(() => {
@@ -37,23 +40,68 @@ function App() {
     })
   }
 
+  function info(data) {
+    Modal.info({
+      title: 'Patient info',
+      content: (
+        <div>
+          <p><Tag color="blue">Fisrt Name:</Tag> {data.first_name}</p>
+          <p><Tag color="blue">Last Name:</Tag> {data.first_name}</p>
+          <p><Tag color="blue">E-Mail:</Tag> {data.email}</p>
+          <p><Tag color="blue">Gender:</Tag> {data.gender}</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  }
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 130 },
-    { field: 'first_name', headerName: 'First Name', width: 130 },
-    { field: 'last_name', headerName: 'Last Name', width: 130 },
-    { field: 'email', headerName: 'E-Mail Address', width: 250 },
-    { field: 'gender', headerName: 'Gender', width: 130 },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'First Name',
+      dataIndex: 'first_name',
+      key: 'first_name',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'last_name',
+      key: 'last_name',
+    },
+    {
+      title: 'E-Mail',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Gender',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Show More',
+      dataIndex: 'show_more',
+      key: 'show_more',
+      render: (label, record) => {
+        console.log(record)
+        return (
+            <Button type="primary" onClick={() => {info(record)}}>
+              Show info
+            </Button>
+        );
+      },
+    },
   ];
 
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      {patients && <DataGrid
-        rows={patients}
+      {patients && <Table
+        dataSource={patients}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
       />}
     </div>
   );
